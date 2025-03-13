@@ -170,7 +170,7 @@ async function submitForm() {
 
 
         try {
-            let response = await fetch("https://script.google.com/macros/s/AKfycbxCPjwExZoSD-e8BxtmFoXyabIaShLPBdECS_04LBDwA_-v4s7mKKOoudv2T4Hq4kX-Dg/exec", {
+            let response = await fetch("https://script.google.com/macros/s/AKfycbwGGfhINIORY8OORS-Nx6PLN_gwo4JAGvJ_qUNoFur83RMQwQV9HevU72yDPnue6nf6cQ/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData.toString()
