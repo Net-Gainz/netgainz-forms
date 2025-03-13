@@ -159,6 +159,12 @@ async function submitForm() {
         let numRegistrations = document.getElementById("num_registrations").value;
         for (let i = 0; i < numRegistrations; i++) {
             formData.append(`demat_${i}`, document.getElementById(`demat_name_${i}`).value);
+            let screenshotInput = document.getElementById(`screenshot_${i}`);
+            if (screenshotInput && screenshotInput.files.length > 0) {
+                let file = screenshotInput.files[0];
+                let base64String = await convertToBase64(file); // Convert image to Base64
+                formData.append(`screenshot_${i}`, base64String);
+            }
         }
         fillElement.style.width = "99%";
 
