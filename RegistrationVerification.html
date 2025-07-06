@@ -170,7 +170,7 @@
             width: 0%;
             height: 100%;
             background: #3e8e41;
-            transition: width 2s ease-in-out;
+            transition: width 5s ease-in-out;
         }
 
         .submit-button.success .fill {
@@ -193,10 +193,6 @@
             z-index: 2;
         }
 
-        .submit-button.success .text {
-            display: none;
-        }
-
         .submit-button.success .tick {
             display: inline;
         }
@@ -206,6 +202,26 @@
             top: 0;
             left: 0;
         }
+        /* Error message styling */
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 2px;
+    margin-bottom: -8px;
+}
+
+/* Highlight invalid fields */
+input.error, select.error, textarea.error {
+    border: 2px solid red;
+    background-color: #ffe6e6;
+}
+
+/* Checkbox error (if needed) */
+.consent-error {
+    outline: 2px solid red;
+    box-shadow: 0 0 5px red;
+}
+
     </style>
 </head>
 
@@ -225,10 +241,10 @@
         <h2>Registration Verification Form</h2>
 
         <div id="phase1">
-            <label>Name</label>
+            <label>Your Full Name</label>
             <input type="text" id="name" required placeholder="Name of Person handling the registration">
 
-            <label>Applicant Name</label>
+            <label>Introducer Name</label>
             <input type="text" id="applicant_name" required placeholder="Name of Person whose account opened">
 
             <label>Mobile Number</label>
@@ -273,7 +289,7 @@
 
             <button id="submit-btn" class="submit-button" onclick="submitForm()">
                 <div class="fill" id="fill"></div>
-                <span class="text">Submit</span>
+                <span id="buttontext" class="text">Submit</span>
                 <span class="tick">✅</span>
             </button>
         </div>
