@@ -1,27 +1,11 @@
 function nextPhase(phase) {
-    if (!validatePhase(phase - 1)) {
-        alert("Please fill in all required fields before proceeding.");
-        return;
-    }
-
-    document.getElementById("phase1").classList.add("hidden");
-    document.getElementById("phase2").classList.add("hidden");
-    document.getElementById("phase3").classList.add("hidden");
-    document.getElementById("phase" + phase).classList.remove("hidden");
-
-    if (phase === 3) {
-        generatePreview();
-    }
-}
-
-function nextPhase(phase) {
     let errorContainer = document.getElementById("error-message");
     errorContainer.innerHTML = ""; // Clear previous errors
 
-    if (!validatePhase(phase - 1)) {
-        errorContainer.innerHTML = "<p style='color: red;'>Please fill in all fields before proceeding</p>";
-        return;
-    }
+    // if (!validatePhase(phase - 1)) {
+    //     return;
+    // }
+    
 
     document.getElementById("phase1").classList.add("hidden");
     document.getElementById("phase2").classList.add("hidden");
@@ -36,29 +20,58 @@ function nextPhase(phase) {
 function validatePhase(phase) {
     let isValid = true;
 
+    function validate(id, condition, message) {
+        let el = document.getElementById(id), err = document.getElementById(id + "-error");
+        if (!err) el.insertAdjacentHTML("afterend", `<div id="${id}-error" class="error"></div>`);
+        document.getElementById(id + "-error").textContent = condition ? "" : message;
+        if (!condition) isValid = false;
+    }
+
     if (phase === 1) {
-        let fields = ["name", "applicant_name", "mobile", "batch"];
-        fields.forEach(id => {
-            let element = document.getElementById(id);
-            if (!element.value.trim()) {
-                isValid = false;
-            }
-        });
+        validate("name", document.getElementById("name").value.trim().length >= 2, "Enter a valid name");
+        validate("applicant_name", document.getElementById("applicant_name").value.trim().length >= 2, "Enter a valid applicant name");
+        validate("mobile", /^[6-9]\d{9}$/.test(document.getElementById("mobile").value.trim()), "Enter a valid 10-digit mobile number");
+        validate("batch", document.getElementById("batch").value.trim(), "Select Your Batch");
+        // validate("consent", document.getElementById("consent").checked, "You must agree to proceed.");
     } else if (phase === 2) {
-        let numRegistrations = document.getElementById("num_registrations").value;
-        if (!numRegistrations) return false;
-
-        for (let i = 0; i < numRegistrations; i++) {
-            let demat = document.getElementById(`demat_name_${i}`);
-            let screenshot = document.getElementById(`screenshot_${i}`);
-
-            if (!demat.value.trim() || !screenshot.files.length) {
-                isValid = false;
-            }
+        let num = parseInt(document.getElementById("num_registrations").value, 10);
+        validate("num_registrations", num > 0, "Select Number of Registration");
+        for (let i = 0; i < num; i++) {
+            validate(`demat_name_${i}`, document.getElementById(`demat_name_${i}`).value.trim(), "Select a Demat account");
+            validate(`screenshot_${i}`, document.getElementById(`screenshot_${i}`).files.length > 0, "Upload a screenshot");
         }
     }
 
     return isValid;
+}
+// Ensure unique selections across all dropdowns
+function updateDropdowns() {
+    let dropdowns = document.querySelectorAll(".demat-dropdown");
+    let selectedValues = new Set();
+
+    // Collect selected values
+    dropdowns.forEach(dropdown => {
+        if (dropdown.value) {
+            selectedValues.add(dropdown.value);
+        }
+    });
+    
+
+    // Disable selected options in other dropdowns
+    dropdowns.forEach(dropdown => {
+        let currentValue = dropdown.value;
+        let options = dropdown.querySelectorAll("option");
+
+        options.forEach(option => {
+            if (option.value === "") {
+                // Keep 'Select' disabled
+                option.disabled = true;
+            } else {
+                // Disable other selected values except for the current selection
+                option.disabled = selectedValues.has(option.value) && option.value !== currentValue;
+            }
+        });
+    });
 }
 
 
@@ -73,7 +86,7 @@ function generateRegistrationFields() {
 
         div.innerHTML = `
                     <label>Demat Account Name</label>
-                    <select id="demat_name_${i}" required>
+            <select id="demat_name_${i}" class="demat-dropdown" required onchange="updateDropdowns()">
                         <option value="" disabled selected>Select</option>
                         <option value="MStock">MStock</option>
                         <option value="Upstox">Upstox</option>
@@ -82,6 +95,10 @@ function generateRegistrationFields() {
                         <option value="MotilalOswal">Motilal Oswal</option>
                         <option value="ShareMarket">ShareMarket</option>
                         <option value="AdityaBirla">Aditya Birla</option>
+                        <option value="Groww">Groww</option>
+                        <option value="Lemonn">Lemonn</option>
+                        <option value="Bajaj Finserv">Bajaj Finserv</option>
+                        <option value="Tide">Tide</option>
                     </select>
 
                     <label>Last Page Screenshot</label>
@@ -90,6 +107,8 @@ function generateRegistrationFields() {
                 `;
         container.appendChild(div);
     }
+    updateDropdowns(); // Ensure initial state is correct
+
 }
 
 function previewImage(event, index) {
@@ -135,15 +154,23 @@ function generatePreview() {
 }
 
 async function submitForm() {
+    let errorContainer = document.getElementById("error-message");
+    let consent = document.getElementById("consent");
+        if (!consent.checked) {
+            errorContainer.innerHTML = "<p style='color: red; text-align: center'>You must agree to the terms before submitting</p>";
+            return;
+        }
+    errorContainer.innerHTML = "";
+    document.getElementById("submit-btn").disabled = true;
     let submitButton = document.getElementById("submit-btn");
-    let statusMessage = document.getElementById("status");
     let fillElement = document.getElementById("fill");
+    let buttonText = document.getElementById("buttontext");
 
 
     // Start progressive fill
-    fillElement.style.width = "55%";
-    statusMessage.innerText = "Submitting...";
+    buttonText.innerText = "Submitting...";
     submitButton.classList.add("filling");
+    fillElement.style.width = "55%";
 
 
     // Simulate form submission delay (remove if using real API)
@@ -170,7 +197,7 @@ async function submitForm() {
 
 
         try {
-            let response = await fetch("https://script.google.com/macros/s/AKfycbwGGfhINIORY8OORS-Nx6PLN_gwo4JAGvJ_qUNoFur83RMQwQV9HevU72yDPnue6nf6cQ/exec", {
+            let response = await fetch("https://script.google.com/macros/s/AKfycbxCPjwExZoSD-e8BxtmFoXyabIaShLPBdECS_04LBDwA_-v4s7mKKOoudv2T4Hq4kX-Dg/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData.toString()
@@ -180,16 +207,16 @@ async function submitForm() {
             if (response.ok) {
                 fillElement.style.width = "100%";
                 submitButton.classList.add("success");
-                statusMessage.innerText = "Form Submitted Successfully!";
+                buttonText.innerText = "Form Submitted Successfully!";
             } else {
-                statusMessage.innerText = "Submission Failed. Try Again!";
+                buttonText.innerText = "Submission Failed. Try Again!";
                 submitButton.classList.remove("filling");
             }
         } catch (error) {
-            statusMessage.innerText = "Error submitting the form.";
+            buttonText.innerText = "Error submitting the form.";
             submitButton.classList.remove("filling");
         }
-    }, 2000); // Simulate API call delay
+    }, 100); // Simulate API call delay
 }
 
 
