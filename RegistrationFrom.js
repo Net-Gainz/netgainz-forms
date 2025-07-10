@@ -128,8 +128,8 @@ function generatePreview() {
     }
 
     preview.innerHTML = `
-                <p><strong>Name:</strong> ${name}</p>
-                <p><strong>Applicant Name:</strong> ${applicantName}</p>
+                <p><strong>Intorducer Name:</strong> ${name}</p>
+                <p><strong>Enter Your Name:</strong> ${applicantName}</p>
                 <p><strong>Mobile:</strong> ${mobile}</p>
                 <p><strong>Batch:</strong> ${batch}</p>
                 <p><strong>Number of Registrations:</strong> ${numRegistrations}</p>
