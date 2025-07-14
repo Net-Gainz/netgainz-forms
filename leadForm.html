@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NetGainz - Telecaller Job Application</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 500px;
+      min-height: 90vh;
+      background: #ffffff;
+      padding: 2rem;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      border-top: 5px solid #7335b7;
+    }
+
+    h2 {
+      text-align: center;
+      color: #7335b7;
+      margin-bottom: 1.5rem;
+      font-size: 1.7rem;
+      letter-spacing: -0.5px;
+    }
+
+    label {
+      display: block;
+      margin-top: 1.1rem;
+      font-weight: 600;
+      font-size: 1.05rem;
+      color: #222;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.8rem;
+      margin-top: 0.3rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #fafbfd;
+      font-size: 1rem;
+      transition: border-color 0.2s ease, background 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #7335b7;
+      background-color: #fff;
+      outline: none;
+    }
+
+    input[readonly], select[disabled] {
+      background-color: #f0f0f0;
+      color: #333;
+      cursor: default;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: linear-gradient(90deg, #8b4bd5, #7335b7);
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: all 0.3s ease-in-out;
+    }
+
+    button:hover {
+      background: linear-gradient(90deg, #7335b7, #9960dc);
+      transform: translateY(-2px);
+      box-shadow: 0px 5px 15px rgba(115, 53, 183, 0.3);
+    }
+
+    .success-message, .confirm-button {
+      display: none;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-top: 1.5rem;
+    }
+
+    .confirm-button {
+      display: block;
+      background: linear-gradient(90deg, #28a745, #218838);
+      margin-top: 10px;
+    }
+
+    .success-message {
+      color: #28a745;
+    }
+
+    @media screen and (max-width: 480px) {
+      .form-container {
+        padding: 1.5rem;
+      }
+
+      input, select, textarea {
+  padding: 0.65rem;        /* was 0.95rem */
+  margin-top: 0.3rem;      /* tighter spacing */
+  font-size: 0.95rem;      /* slightly smaller font */
+}
+
+      button {
+        font-size: 1rem;
+        padding: 0.9rem;
+      }
+    }
+    .hidden {
+  display: none;
+}
+
+/* Message Box Container */
+.message-box {
+  display: none;
+  width: 100%;
+  height: 100%;
+  min-height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  border-top: 6px solid transparent;
+  border-image: linear-gradient(90deg, #8b4bd5, #7335b7) 1;
+  animation: fadeInUp 0.4s ease;
+}
+
+.message-card .icon {
+  font-size: 3.2rem;
+  margin-bottom: 1rem;
+  color: #7335b7;
+}
+
+.message-card h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #2b2b2b;
+  margin-bottom: 0.8rem;
+}
+
+.message-card p {
+  font-size: 1.05rem;
+  color: #5a5a5a;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.message-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px auto;
+  color: white;
+  background: linear-gradient(90deg, #8b4bd5, #7335b7);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Mobile Responsive */
+@media (max-width: 480px) {
+  .message-card {
+    padding: 2rem 1.2rem;
+  }
+  .message-card h3 {
+    font-size: 1.4rem;
+  }
+  .message-card p {
+    font-size: 0.95rem;
+  }
+}
+.error {
+  display: block;
+  height: 2px; /* reserve fixed space */
+  color: #d32f2f;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  transition: all 0.3s ease;
+}
+/* Button loader */
+.btn-loader {
+  display: none;
+  width: 18px;
+  height: 18px;
+  border: 3px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+}
+
+/* Animation */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Active state */
+.loading .btn-text {
+  display: none;
+}
+.loading .btn-loader {
+  display: inline-block;
+}
+
+  </style>
+</head>
+<body>
+<div class="form-container" id="form-container">
+  <h2>Apply for Telecaller Job</h2>
+  <form id="jobForm" novalidate>
+    <label for="name">Full Name</label>
+    <input type="text" name="name" id="name" required pattern="[A-Za-z\s]{2,}" />
+    <small class="error" id="error-name"></small>
+
+
+    <label for="phone">Calling Number</label>
+    <input type="tel" name="phone" id="phone" required pattern="[0-9]{10}" maxlength="10" placeholder="Enter 10-digit mobile number" />
+    <small class="error" id="error-phone"></small>
+
+
+    <label for="age">Age</label>
+    <input type="tel" name="age" id="age" maxlength="2" required min="17" max="60" />
+    <small class="error" id="error-age"></small>
+
+
+    <label for="languages">Languages Known</label>
+    <input type="text" name="languages" id="languages" placeholder="e.g. Hindi, English" required />
+    <small class="error" id="error-languages"></small>
+
+
+    <label for="experience">Experience in Telecalling</label>
+    <select name="experience" id="experience" required>
+      <option value="">-- Select --</option>
+      <option value="Yes">Yes</option>
+      <option value="No">No</option>
+    </select>
+    <small class="error" id="error-experience"></small>
+
+
+    <label for="city">City</label>
+    <input type="text" name="city" id="city" required  pattern="[A-Za-z\s]{2,}" />
+    <small class="error" id="error-city"></small>
+
+
+    <label for="state">State</label>
+    <select name="state" id="state" required>
+     <option value="">-- Select State --</option>
+<option value="Andhra Pradesh">Andhra Pradesh</option>
+<option value="Arunachal Pradesh">Arunachal Pradesh</option>
+<option value="Assam">Assam</option>
+<option value="Bihar">Bihar</option>
+<option value="Chhattisgarh">Chhattisgarh</option>
+<option value="Goa">Goa</option>
+<option value="Gujarat">Gujarat</option>
+<option value="Haryana">Haryana</option>
+<option value="Himachal Pradesh">Himachal Pradesh</option>
+<option value="Jharkhand">Jharkhand</option>
+<option value="Karnataka">Karnataka</option>
+<option value="Kerala">Kerala</option>
+<option value="Madhya Pradesh">Madhya Pradesh</option>
+<option value="Maharashtra">Maharashtra</option>
+<option value="Manipur">Manipur</option>
+<option value="Meghalaya">Meghalaya</option>
+<option value="Mizoram">Mizoram</option>
+<option value="Nagaland">Nagaland</option>
+<option value="Odisha">Odisha</option>
+<option value="Punjab">Punjab</option>
+<option value="Rajasthan">Rajasthan</option>
+<option value="Sikkim">Sikkim</option>
+<option value="Tamil Nadu">Tamil Nadu</option>
+<option value="Telangana">Telangana</option>
+<option value="Tripura">Tripura</option>
+<option value="Uttar Pradesh">Uttar Pradesh</option>
+<option value="Uttarakhand">Uttarakhand</option>
+<option value="West Bengal">West Bengal</option>
+<option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+<option value="Chandigarh">Chandigarh</option>
+<option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+<option value="Delhi">Delhi</option>
+<option value="Lakshadweep">Lakshadweep</option>
+<option value="Puducherry">Puducherry</option>
+
+      <!-- You can expand the list -->
+    </select>
+    <small class="error" id="error-state"></small>
+
+
+<button type="submit" id="submitBtn">
+  <span class="btn-text">Submit Application</span>
+  <span class="btn-loader"></span>
+</button>
+<button type="button" class="confirm-button" id="confirmBtn" style="display: none;">Confirm Submission</button>
+  </form>
+</div>
+<div id="messageBox" class="message-box" style="display: none";>
+  <div class="message-card">
+    <div class="message-icon success-icon" id="messageIcon">🎉</div>
+    <h3 id="messageTitle">Application Submitted</h3>
+    <p id="messageDesc">Our HR will contact you shortly.</p>
+  </div>
+</div>
+
+</div>
+
+
+
+<script>
+  const form = document.getElementById('jobForm');
+const formContainer = document.getElementById('form-container');
+const messageBox = document.getElementById('messageBox');
+const messageIcon = document.getElementById('messageIcon');
+const messageTitle = document.getElementById('messageTitle');
+const messageDesc = document.getElementById('messageDesc');
+
+
+function showError(id, message) {
+  document.getElementById(`error-${id}`).textContent = message;
+}
+
+function clearErrors() {
+  const errors = document.querySelectorAll('.error');
+  errors.forEach(e => e.textContent = '');
+}
+
+form.addEventListener('submit', async (e) => {
+   e.preventDefault();
+  clearErrors(); // reset
+let valid = true;
+
+
+  const data = {
+    name: form.elements.name.value.trim(),
+    phone: form.elements.phone.value.trim(),
+    age: form.elements.age.value.trim(),
+    languages: form.elements.languages.value.trim(),
+    experience: form.elements.experience.value.trim(),
+    city: form.elements.city.value.trim(),
+    state: form.elements.state.value.trim(),
+  };
+
+  if (!/^[A-Za-z\s]{2,}$/.test(data.name)) {
+    showError('name', 'Enter a valid full name (letters only)');
+    valid = false;
+  }
+
+  if (!/^[0-9]{10}$/.test(data.phone)) {
+    showError('phone', 'Enter a valid 10-digit mobile number');
+    valid = false;
+  }
+
+  const age = Number(data.age);
+  if (!age || age < 18 || age > 60) {
+    showError('age', 'Age must be between 18 and 60');
+    valid = false;
+  }
+
+  if (!data.languages.trim()) {
+    showError('languages', 'Please enter languages you know');
+    valid = false;
+  }
+
+  if (!data.experience) {
+    showError('experience', 'Please select your experience');
+    valid = false;
+  }
+
+  if (!/^[A-Za-z\s]{2,}$/.test(data.city)) {
+    showError('city', 'Please enter valid city name');
+    valid = false;
+  }
+
+  if (!data.state) {
+    showError('state', 'Please select your state');
+    valid = false;
+  }
+
+  if (!valid) return;
+
+   // ✅ Show loading
+  submitBtn.classList.add('loading');
+  submitBtn.disabled = true;
+
+  const encoded = new URLSearchParams(data);
+
+  try {
+    const response = await fetch('https://script.google.com/macros/s/AKfycbzo9YOiT_E71Np0etGhyKVvOc3DideXInFdsJ915veeJd7bFDnu8vWz0QB-o8k1qL6B/exec', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: encoded.toString(),
+    });
+
+    const result = await response.json();
+
+    // Hide form and show message
+    formContainer.style.display = 'none';
+    messageBox.style.display = 'flex';
+
+    if (result.status === 'success') {
+      messageIcon.textContent = '✔';
+      messageTitle.textContent = 'Application Submitted!';
+      messageDesc.textContent = 'Our HR team will get in touch with you shortly.';
+    } else if (result.status === 'duplicate') {
+      messageIcon.textContent = '⚠️';
+      messageTitle.textContent = 'Already Submitted';
+      messageDesc.textContent = 'You have already submitted your application. Please wait for our team to contact you.';
+    } else {
+      throw new Error('Unexpected response');
+    }
+
+  } catch (err) {
+    console.error(err);
+    messageBox.style.display = 'flex';
+    formContainer.style.display = 'none';
+
+    messageIcon.textContent = '❌';
+    messageTitle.textContent = 'Submission Failed';
+    messageDesc.textContent = 'Something went wrong. Please try again later.';
+  }
+
+   // ✅ Stop loading
+  submitBtn.classList.remove('loading');
+  submitBtn.disabled = false;
+});
+
+</script>
+
+
+</body>
+</html>
