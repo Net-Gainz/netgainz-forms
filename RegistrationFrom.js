@@ -16,16 +16,22 @@ function nextPhase(phase) {
 
 function nextPhase(phase) {
     let errorContainer = document.getElementById("error-message");
-    errorContainer.innerHTML = ""; // Clear previous errors
+    errorContainer.innerHTML = "";
 
-    if (!validatePhase(phase - 1)) {
-        errorContainer.innerHTML = "<p style='color: red;'>Please fill in all fields before proceeding</p>";
+    const validation = validatePhase(phase - 1);
+
+    if (validation !== true) {
+        // Show the error returned from validatePhase
+        errorContainer.innerHTML = `<p style="color:red;">${validation}</p>`;
         return;
     }
 
+    // Hide all phases
     document.getElementById("phase1").classList.add("hidden");
     document.getElementById("phase2").classList.add("hidden");
     document.getElementById("phase3").classList.add("hidden");
+
+    // Show the next phase
     document.getElementById("phase" + phase).classList.remove("hidden");
 
     if (phase === 3) {
@@ -33,33 +39,58 @@ function nextPhase(phase) {
     }
 }
 
-function validatePhase(phase) {
-    let isValid = true;
 
+function validatePhase(phase) {
     if (phase === 1) {
-        let fields = ["name", "applicant_name", "mobile", "batch"];
-        fields.forEach(id => {
-            let element = document.getElementById(id);
-            if (!element.value.trim()) {
-                isValid = false;
-            }
-        });
-    } else if (phase === 2) {
+        const name = document.getElementById("name").value.trim();
+        const applicantName = document.getElementById("applicant_name").value.trim();
+        const mobile = document.getElementById("mobile").value.trim();
+        const batch = document.getElementById("batch").value.trim();
+        const consent = document.getElementById("consent").checked;
+
+const nameRegex = /^[A-Za-z\s]{2,}$/;
+        const mobileRegex = /^[6-9]\d{9}$/;
+
+        if (!name || !nameRegex.test(name)) {
+            return "Please enter a valid Introducer Name (letters only)";
+        }
+
+        if (!applicantName || !nameRegex.test(applicantName)) {
+            return "Please enter a valid Applicant Name (letters only)";
+        }
+
+        if (!mobile || !mobileRegex.test(mobile)) {
+            return "Please enter a valid 10-digit mobile number";
+        }
+
+        if (!batch) {
+            return "Please enter your Batch";
+        }
+    }
+
+    if (phase === 2) {
         let numRegistrations = document.getElementById("num_registrations").value;
-        if (!numRegistrations) return false;
+        if (!numRegistrations || isNaN(numRegistrations) || parseInt(numRegistrations) <= 0) {
+            return "Please enter a valid number of registrations";
+        }
 
         for (let i = 0; i < numRegistrations; i++) {
             let demat = document.getElementById(`demat_name_${i}`);
             let screenshot = document.getElementById(`screenshot_${i}`);
 
-            if (!demat.value.trim() || !screenshot.files.length) {
-                isValid = false;
+            if (!demat.value.trim()) {
+                return `Please select a demat account at index ${i + 1}`;
+            }
+
+            if (!screenshot || !screenshot.files.length) {
+                return `Please upload a screenshot for demat ${i + 1}`;
             }
         }
     }
 
-    return isValid;
+    return true; // All good
 }
+
 
 
 
@@ -138,23 +169,30 @@ function generatePreview() {
 }
 
 async function submitForm() {
+document.getElementById("error-message").innerHTML = "";
     let submitButton = document.getElementById("submit-btn");
     let statusMessage = document.getElementById("status");
     let fillElement = document.getElementById("fill");
+      submitButton.disabled = true;
 
+    let consentBox = document.getElementById("consent");
+    if (!consentBox.checked) {
+        isValid = false;
+        document.getElementById("error-message").innerHTML = "<p style='color: red;'>Please accept the consent to proceed.</p>";
+              submitButton.disabled = false;
 
-    // Start progressive fill
-    fillElement.style.width = "55%";
+        return;
+    }
+
+    fillElement.style.width = "30%";
     statusMessage.innerText = "Submitting...";
     submitButton.classList.add("filling");
 
-
-    // Simulate form submission delay (remove if using real API)
     setTimeout(async () => {
         let formData = new URLSearchParams();
         formData.append("name", document.getElementById("name").value);
         formData.append("applicant_name", document.getElementById("applicant_name").value);
-        formData.append("mobile", document.getElementById("mobile").value);
+        formData.append("mobile", document.getElementById("mobile").value.trim());
         formData.append("batch", document.getElementById("batch").value);
         formData.append("num_registrations", document.getElementById("num_registrations").value);
         formData.append("consent", document.getElementById("consent").checked ? "Yes" : "No");
@@ -165,35 +203,48 @@ async function submitForm() {
             let screenshotInput = document.getElementById(`screenshot_${i}`);
             if (screenshotInput && screenshotInput.files.length > 0) {
                 let file = screenshotInput.files[0];
-                let base64String = await convertToBase64(file); // Convert image to Base64
+                let base64String = await convertToBase64(file);
                 formData.append(`screenshot_${i}`, base64String);
             }
         }
-        fillElement.style.width = "99%";
 
+        fillElement.style.width = "90%";
 
         try {
-            let response = await fetch("https://script.google.com/macros/s/AKfycbwGGfhINIORY8OORS-Nx6PLN_gwo4JAGvJ_qUNoFur83RMQwQV9HevU72yDPnue6nf6cQ/exec", {
+            let response = await fetch("https://script.google.com/macros/s/AKfycbzRwgOm0vtXGKfkIaA5nxUELdiFp7NwWDxvrNuDwa67gRrQngxWy-ZNFgHbBzXhEt_7/exec", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData.toString()
             });
 
+            let result = await response.json(); // Parse JSON response
 
-            if (response.ok) {
+            if (result.status === "success") {
                 fillElement.style.width = "100%";
                 submitButton.classList.add("success");
-                statusMessage.innerText = "Form Submitted Successfully!";
-            } else {
-                statusMessage.innerText = "Submission Failed. Try Again!";
-                submitButton.classList.remove("filling");
+                statusMessage.innerText = "✅ Form Submitted Successfully!";
+            } 
+            else if(result.message === "Duplicate entry: Mobile number already exists.")
+            {
+                statusMessage.innerText = "❌ You are Already Registered";
+                document.getElementById("consent").disabled = true;
+                submitButton.remove();
+
             }
+            else {
+                // Backend returned error (like duplicate)
+                statusMessage.innerText = "❌ " + result.message;
+            }
+
         } catch (error) {
-            statusMessage.innerText = "Error submitting the form.";
+            statusMessage.innerText = "❌ Submission failed. Please try again.";
             submitButton.classList.remove("filling");
+            fillElement.style.width = "0%";
         }
-    }, 2000); // Simulate API call delay
+    }, 1000); // Optional animation delay
 }
+
+
 
 
 function convertToBase64(file) {
