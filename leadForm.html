@@ -444,6 +444,10 @@ let valid = true;
       messageIcon.textContent = '✔';
       messageTitle.textContent = 'Application Submitted!';
       messageDesc.textContent = 'Our HR team will get in touch with you shortly.';
+if (typeof fbq === 'function') {
+  fbq('track', 'Lead');  // or 'CompleteRegistration' based on your goal
+}
+
     } else if (result.status === 'duplicate') {
       messageIcon.textContent = '⚠️';
       messageTitle.textContent = 'Already Submitted';
