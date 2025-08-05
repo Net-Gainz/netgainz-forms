@@ -190,12 +190,16 @@ document.getElementById("error-message").innerHTML = "";
 
     setTimeout(async () => {
         let formData = new URLSearchParams();
+        
         formData.append("name", document.getElementById("name").value);
         formData.append("applicant_name", document.getElementById("applicant_name").value);
         formData.append("mobile", document.getElementById("mobile").value.trim());
         formData.append("batch", document.getElementById("batch").value);
         formData.append("num_registrations", document.getElementById("num_registrations").value);
         formData.append("consent", document.getElementById("consent").checked ? "Yes" : "No");
+        const src = urlParams.get("src") || "";
+formData.append("src", src);
+
 
         let numRegistrations = document.getElementById("num_registrations").value;
         for (let i = 0; i < numRegistrations; i++) {
@@ -254,4 +258,5 @@ function convertToBase64(file) {
         reader.onload = () => resolve(reader.result.split(",")[1]);
         reader.onerror = error => reject(error);
     });
+
 }
