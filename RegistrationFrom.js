@@ -115,6 +115,8 @@ function generateRegistrationFields() {
                         <option value="Groww">Groww</option>
                         <option value="Lemonn">Lemonn</option>
                         <option value="Bajaj Finserv">Bajaj Finserv</option>
+                        <option value="Paytm Money">Paytm Money</option>
+                        <option value="Jainam">Jainam</option>
                         <option value="Tide">Tide</option>
                     </select>
 
@@ -271,4 +273,5 @@ function convertToBase64(file) {
       srcInput.value = srcValue;
     }
   });
+
 
