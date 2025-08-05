@@ -187,6 +187,8 @@ document.getElementById("error-message").innerHTML = "";
     fillElement.style.width = "30%";
     statusMessage.innerText = "Submitting...";
     submitButton.classList.add("filling");
+    const urlParams = new URLSearchParams(window.location.search);
+const src = urlParams.get("src") || "";
 
     setTimeout(async () => {
         let formData = new URLSearchParams();
@@ -197,10 +199,6 @@ document.getElementById("error-message").innerHTML = "";
         formData.append("batch", document.getElementById("batch").value);
         formData.append("num_registrations", document.getElementById("num_registrations").value);
         formData.append("consent", document.getElementById("consent").checked ? "Yes" : "No");
-
-const urlParams = new URLSearchParams(window.location.search);
-const src = urlParams.get("src") || "";
-console.log(formData);
 console.log("SRC from URL:", src);
 formData.append("src", src);
 
@@ -263,6 +261,7 @@ function convertToBase64(file) {
     });
 
 }
+
 
 
 
