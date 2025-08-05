@@ -201,6 +201,8 @@ document.getElementById("error-message").innerHTML = "";
         formData.append("batch", document.getElementById("batch").value);
         formData.append("num_registrations", document.getElementById("num_registrations").value);
         formData.append("consent", document.getElementById("consent").checked ? "Yes" : "No");
+formData.append("src", document.getElementById("src").value); //
+
 
         let numRegistrations = document.getElementById("num_registrations").value;
         for (let i = 0; i < numRegistrations; i++) {
@@ -261,6 +263,7 @@ function convertToBase64(file) {
     });
 
 }
+
 
 
 
