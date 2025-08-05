@@ -1,7 +1,14 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const src = urlParams.get("src") || "";
-    document.getElementById("src").value = src;
+ document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const srcValue = params.get("src") || "";
+    const srcInput = document.getElementById("src");
+
+    console.log("URL param src =", srcValue);
+    console.log("Hidden input =", srcInput);
+
+    if (srcInput) {
+      srcInput.value = srcValue;
+    }
   });
 
 function nextPhase(phase) {
@@ -265,6 +272,7 @@ function convertToBase64(file) {
     });
 
 }
+
 
 
 
