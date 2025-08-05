@@ -201,7 +201,7 @@ document.getElementById("error-message").innerHTML = "";
 const urlParams = new URLSearchParams(window.location.search);
 const src = urlParams.get("src") || "";
 formData.append("src", src);
-
+console.log(formData);
 
         let numRegistrations = document.getElementById("num_registrations").value;
         for (let i = 0; i < numRegistrations; i++) {
@@ -262,4 +262,5 @@ function convertToBase64(file) {
     });
 
 }
+
 
