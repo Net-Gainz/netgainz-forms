@@ -1,16 +1,3 @@
- document.addEventListener("DOMContentLoaded", function () {
-    const params = new URLSearchParams(window.location.search);
-    const srcValue = params.get("src") || "";
-    const srcInput = document.getElementById("src");
-
-    console.log("URL param src =", srcValue);
-    console.log("Hidden input =", srcInput);
-
-    if (srcInput) {
-      srcInput.value = srcValue;
-    }
-  });
-
 function nextPhase(phase) {
     if (!validatePhase(phase - 1)) {
         alert("Please fill in all required fields before proceeding.");
@@ -272,12 +259,16 @@ function convertToBase64(file) {
     });
 
 }
+ document.addEventListener("DOMContentLoaded", function () {
+    const params = new URLSearchParams(window.location.search);
+    const srcValue = params.get("src") || "";
+    const srcInput = document.getElementById("src");
 
+    console.log("URL param src =", srcValue);
+    console.log("Hidden input =", srcInput);
 
-
-
-
-
-
-
+    if (srcInput) {
+      srcInput.value = srcValue;
+    }
+  });
 
