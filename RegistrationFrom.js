@@ -197,7 +197,9 @@ document.getElementById("error-message").innerHTML = "";
         formData.append("batch", document.getElementById("batch").value);
         formData.append("num_registrations", document.getElementById("num_registrations").value);
         formData.append("consent", document.getElementById("consent").checked ? "Yes" : "No");
-        const src = urlParams.get("src") || "";
+
+const urlParams = new URLSearchParams(window.location.search);
+const src = urlParams.get("src") || "";
 formData.append("src", src);
 
 
@@ -260,3 +262,4 @@ function convertToBase64(file) {
     });
 
 }
+
