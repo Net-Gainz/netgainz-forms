@@ -1,3 +1,9 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const src = urlParams.get("src") || "";
+    document.getElementById("src").value = src;
+  });
+
 function nextPhase(phase) {
     if (!validatePhase(phase - 1)) {
         alert("Please fill in all required fields before proceeding.");
@@ -167,11 +173,7 @@ function generatePreview() {
                 ${registrationDetails}
             `;
 }
-document.addEventListener("DOMContentLoaded", () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const src = urlParams.get("src") || "";
-    document.getElementById("src").value = src;
-  });
+
 async function submitForm() {
 document.getElementById("error-message").innerHTML = "";
     let submitButton = document.getElementById("submit-btn");
@@ -263,6 +265,7 @@ function convertToBase64(file) {
     });
 
 }
+
 
 
 
